@@ -1,14 +1,30 @@
 CXX = g++
 CXXFLAGS = -g -std=c++11 -Wall
-SOURCE = driver.o
+SERVER = server.o
+PORT = 8080
+HOST = $(shell hostname)
+CLIENT = client.o
 
 # Makes .o files where asked from their .cpp source
 %.o: %.cpp
 	$(CXX) -c $(CXXFLAGS) $<
 
-all: $(SOURCE)
-	$(CXX) $(SOURCE) -o walkabout
+# Runs the server
+run_server: server
+	./server $(PORT)
+    
+# Runs the client
+run_client: client
+	./client $(HOST) $(PORT)
 
-# Remove all .o files
+# Compiles the server executable
+server: $(SERVER)
+	$(CXX) $(SERVER) -o server
+
+# Compiles the client executable
+client: $(CLIENT)
+	$(CXX) $(CLIENT) -o client
+
+# Remove all .o files and executables
 clean:
-	$(RM) *.o walkabout
+	$(RM) *.o server client
